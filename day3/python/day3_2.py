@@ -40,13 +40,29 @@ with open("../input/input.txt") as fp:
         if line_num == 1:
             range2 = build_range(coords)
         line_num += 1
-
+            
 md = float("inf")
+min_steps = float("inf")
+wire1_steps = 0
 for i in range(1, len(range1)):
+    wire1_steps += abs(range1[i][0][0] - range1[i][1][0]) + abs(range1[i][0][1]-range1[i][1][1])
+    d1 = range1[i][1]
+    wire2_steps = 0
     for j in range(1, len(range2)):
+        wire2_steps += abs(range2[j][0][0] - range2[j][1][0]) + abs(range2[j][0][1]-range2[j][1][1])
+        d2 = range2[j][1]
         res = findIntersection(range1[i][0][0], range1[i][0][1], range1[i][1][0], range1[i][1][1], 
                          range2[j][0][0], range2[j][0][1], range2[j][1][0], range2[j][1][1])
+        
+        total_steps = wire1_steps + wire2_steps
+        
         if res and res != (0,0):
+            d1_to_res = abs(res[0] - d1[0]) + abs(res[1] - d1[1])
+            d2_to_res = abs(res[0] - d2[0]) + abs(res[1] - d2[1])
+    
             temp = abs(0 - res[0]) + abs(0 - res[1])
             md = min(md, temp)
-print(md)
+
+            min_steps = min(min_steps, total_steps - d1_to_res - d2_to_res)
+            
+print(f"{md} - {min_steps}")
